@@ -50,11 +50,11 @@ Waktu: ${waktu}
 Device: ${userAgent}`;
     }
 
-    await fetch(`https://api.telegram.org/bot${8204783079:AAEMyctmPFs5qOTqa6ocU3Q0V4XiiQmwViM}/sendMessage`, {
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            chat_id: 8320264345,
+            chat_id: CHAT_ID,
             text: pesan
         })
     });
