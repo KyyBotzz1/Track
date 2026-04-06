@@ -7,7 +7,10 @@ export default async function handler(req, res) {
         return res.status(200).send("OK");
     }
 
-    const ip = req.headers["x-forwarded-for"] || "Unknown";
+    const ip =
+  req.headers["x-forwarded-for"]?.split(",")[0] ||
+  req.headers["x-real-ip"] ||
+  "Unknown";
     const userAgent = req.headers["user-agent"];
     const waktu = new Date().toLocaleString();
 
