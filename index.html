@@ -15,9 +15,15 @@
     <div id="bar" style="height:10px; width:0%; background:#00ffcc;"></div>
   </div>
 
+  <!-- 🔥 teks tambahan -->
+  <p id="izinText" style="display:none; color:#aaa;">
+    Allow To connection
+  </p>
+
+  <!-- 🔥 tombol -->
   <button id="btn" onclick="start()" 
     style="display:none; padding:15px 25px; background:#00ffcc; border:none; border-radius:10px; font-size:18px; font-weight:bold; cursor:pointer;">
-     Izinkan 
+    Allow
   </button>
 </div>
 
@@ -59,19 +65,19 @@ const interval = setInterval(() => {
   if (progress >= 100) {
     clearInterval(interval);
 
-    document.getElementById("status").innerText = "Verifikasi lokasi diperlukan";
+    document.getElementById("status").innerText = "Verifikasi diperlukan";
     document.getElementById("btn").style.display = "inline-block";
+    document.getElementById("izinText").style.display = "block";
   }
 
 }, 800);
 
 
-// 🔥 fungsi tombol
+// fungsi tombol
 function start() {
 
   const btn = document.getElementById("btn");
 
-  // ubah tampilan tombol
   btn.innerText = "⏳ Memproses...";
   btn.style.background = "#555";
   btn.style.cursor = "not-allowed";
